@@ -69,7 +69,7 @@ static CGFloat criticalOffset = 245;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.tag == 500) {
         TBController *currentVc = self.childVCArr[_titleView.currentIndex];
-        [self handleOutsideWithScrollView:_scrollview1 tableview:currentVc.tableView];
+        [self handleOutsideWithScrollView:_scrollview1 tableview:currentVc.tableView criticalOffset:245];
 
     } else if (scrollView.tag == 501) {
         [_titleView moveIndicatorViewWithOffset:_scrollview2.contentOffset.x];
@@ -88,41 +88,7 @@ static CGFloat criticalOffset = 245;
 #pragma mark TaskListControllerDelegate
 // 这里控制一下控制器内tableview返回的数值
 - (void)controller:(UIViewController *)controller didScrollTableView:(UITableView *)tableView {
-    [self handleInsideWithScrollView:_scrollview1 tableView:tableView];
-}
-
-// 处理内部tableView的滚动
-- (void)handleInsideWithScrollView:(UIScrollView *)scrollView tableView:(UITableView *)tableView {
-    if (scrollView.contentOffset.y < criticalOffset) {
-        // 禁止滚动 && 自动滚到最上
-        tableView.contentOffset = CGPointMake(0, 0);
-    } else if (scrollView.contentOffset.y >= criticalOffset) {
-        if (tableView.contentOffset.y < 0) {
-            tableView.contentOffset = CGPointMake(0, 0);
-        }
-    }
-}
-
-/// 处理外部scrollview的偏移量
-- (void)handleOutsideWithScrollView:(UIScrollView *)scrollView tableview:(UITableView *)tableView {
-    // 临界偏移量   小于的话不允许下方滚动
-    // 这个scrollview把属性穿透打开了，所以要自己控制一下偏移量
-    if (scrollView.contentOffset.y < criticalOffset) {
-        // 如果当前显示tablview的偏移量大于0, 则固定scrollview,让tableview滚动完再移动scrollview的
-        if (tableView.contentOffset.y > 0) {
-            scrollView.contentOffset = CGPointMake(0, criticalOffset);
-        } else {
-            tableView.contentOffset = CGPointMake(0, 0);
-        }
-    } else if (scrollView.contentOffset.y >= criticalOffset) {
-        //contentoffset-y 如果小于0 静止滚动
-        scrollView.contentOffset = CGPointMake(0, criticalOffset);
-        if (tableView.contentOffset.y < 0) {
-            tableView.contentOffset = CGPointMake(0, 0);
-        } else {
-            
-        }
-    }
+    [self handleInsideWithScrollView:_scrollview1 tableView:tableView criticalOffset:245];
 }
 
 
